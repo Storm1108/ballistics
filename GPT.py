@@ -4,11 +4,11 @@ from datetime import datetime
 from nrlmsise00 import msise_model
 from math import sin, cos, radians, sqrt
 from matplotlib import pyplot as plt
+from matplotlib import use
 import logging
-from numba import jit
+use('TkAgg')
 
 # Математическая модель движения
-@jit
 def right_sides(t, state_vec, rho):
     derives = np.zeros(6, dtype=np.float64)
     r_abs_m = np.linalg.norm(state_vec[0:3])
@@ -18,8 +18,7 @@ def right_sides(t, state_vec, rho):
     return derives
 
 # Численный метод Рунге-Кутты
-@jit
-def RK4step(t1, state_vec1, rho, h_s=0.5):
+def RK4step(t1, state_vec1, rho, h_s=10):
     k1 = right_sides(t1, state_vec1, rho)
     k2 = right_sides(t1 + 0.5 * h_s, state_vec1 + 0.5 * h_s * k1, rho)
     k3 = right_sides(t1 + 0.5 * h_s, state_vec1 + 0.5 * h_s * k2, rho)
